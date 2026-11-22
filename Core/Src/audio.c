@@ -4,6 +4,7 @@
 
 #include "main.h"
 #include "cs42l51.h"
+#include "uart.h"
 #include "mem_attr.h"
 
 extern SAI_HandleTypeDef hsai_BlockA1; /* TX, master */
@@ -11,7 +12,7 @@ extern SAI_HandleTypeDef hsai_BlockB1; /* RX, slave */
 
 /* int16_t sample count in one half */
 #define BLOCK_SAMPLES (AUDIO_FRAMES_PER_BLOCK * AUDIO_CHANNELS)
-#define BUF_SAMPLES   (2U * BLOCK_SAMPLES)
+#define BUF_SAMPLES   (2 * BLOCK_SAMPLES)
 
 /* High pass filter weights - exported from MatLab */
 static const double g_weights[] = {
@@ -116,10 +117,14 @@ static void audio_filter(const int16_t *in, int16_t *out, uint32_t frames)
                 sum += sample * g_weights[w];
             }
 
-            /* Saturate result */
+            /* Write result to audio TX buffer */
             out[f * AUDIO_CHANNELS + ch] = audio_sat(sum);
+            uart_write_u16(out[f * AUDIO_CHANNELS + ch]);
         }
     }
+
+    /* Write result to UART */
+    //uart_write_mem(out, frames * AUDIO_CHANNELS * sizeof(*out));
 
     /* Update filter history */
     if(frames >= WEIGHTS_LEN - 1) {
