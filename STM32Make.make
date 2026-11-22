@@ -75,6 +75,8 @@ endif
 ######################################
 # C sources
 C_SOURCES =  \
+Core/Src/audio.c \
+Core/Src/cs42l51.c \
 Core/Src/main.c \
 Core/Src/stm32h7xx_hal_msp.c \
 Core/Src/stm32h7xx_it.c \

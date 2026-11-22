@@ -22,6 +22,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "audio.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,7 +102,7 @@ static void MX_TIM5_Init(void);
   */
 int main(void)
 {
-
+  int r;
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -140,6 +142,17 @@ int main(void)
   MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
 
+  /* Initialize audio processing */
+  r = audio_init();
+  if(r != AUDIO_OK)
+  {
+    /* Signal audio init error */
+    while (1) {
+      HAL_GPIO_TogglePin(USER_LED2_GPIO_Port, USER_LED2_Pin);
+      HAL_Delay(100);
+    }
+  }
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -148,7 +161,6 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-    /* USER_LED1 */
     HAL_GPIO_TogglePin(USER_LED1_GPIO_Port, USER_LED1_Pin);
     HAL_Delay(1000);
 
@@ -242,7 +254,7 @@ void PeriphCommonClock_Config(void)
                               |RCC_PERIPHCLK_SAI1|RCC_PERIPHCLK_CKPER;
   PeriphClkInitStruct.PLL2.PLL2M = 5;
   PeriphClkInitStruct.PLL2.PLL2N = 64;
-  PeriphClkInitStruct.PLL2.PLL2P = 120;
+  PeriphClkInitStruct.PLL2.PLL2P = 25;
   PeriphClkInitStruct.PLL2.PLL2Q = 2;
   PeriphClkInitStruct.PLL2.PLL2R = 4;
   PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_2;

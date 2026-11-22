@@ -63,9 +63,9 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 MEMORY
 {
 DTCMRAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 128K
-RAM (xrw)      : ORIGIN = 0x24000000, LENGTH = 1024K
+RAM_D1 (xrw)       : ORIGIN = 0x24000000, LENGTH = 1024K
 ITCMRAM (xrw)      : ORIGIN = 0x00000000, LENGTH = 64K
-FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 2048K
+FLASH (rx)         : ORIGIN = 0x8000000, LENGTH = 2048K
 }
 
 /* Define output sections */
@@ -195,6 +195,14 @@ SECTIONS
     . = ALIGN(8);
   } >DTCMRAM
 
+  /* Section for __ATTR_RAM_D1 variables */
+  .ram_d1 (NOLOAD) :
+  {
+    . = ALIGN(32);
+    *(.ram_d1)
+    *(.ram_d1*)
+    . = ALIGN(32);
+  } >RAM_D1
 
 
   /* Remove information from the standard libraries */
@@ -206,5 +214,3 @@ SECTIONS
   }
 
 }
-
-
