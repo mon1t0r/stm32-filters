@@ -1,6 +1,7 @@
 #include "uart.h"
 
 #include "stm32h7xx_hal_def.h"
+#include "mem_attr.h"
 
 #include <string.h>
 
@@ -12,7 +13,7 @@
 
 extern UART_HandleTypeDef huart1;
 
-static uint8_t g_uart_buf[UART_TX_BUF_SIZE];
+static uint8_t g_uart_buf[UART_TX_BUF_SIZE] __ATTR_RAM_D1;
 static volatile uint32_t g_uart_start;
 static volatile uint32_t g_uart_end;
 static volatile uint32_t g_uart_tx_len; /* Length during current transmission */
@@ -28,6 +29,7 @@ static void uart_kick(void)
 
     /* If is transmitting or no data is present */
     if(g_uart_is_busy || g_uart_end == g_uart_start) {
+        /* Try transmitting at the next kick call */
         return;
     }
 
@@ -38,7 +40,7 @@ static void uart_kick(void)
         len = UART_TX_BUF_SIZE - g_uart_start;
     }
 
-    res = HAL_UART_Transmit_IT(
+    res = HAL_UART_Transmit_DMA(
         &huart1,
         &g_uart_buf[g_uart_start],
         (uint16_t) len
@@ -79,13 +81,13 @@ uart_queue(const uint8_t *data_a, uint32_t data_a_sz,
     }
 
     /* Copy data A */
-    for (i = 0; i < data_a_sz; i++) {
+    for(i = 0; i < data_a_sz; i++) {
         g_uart_buf[g_uart_end] = data_a[i];
         g_uart_end = (g_uart_end + 1) & UART_TX_BUF_MASK;
     }
 
     /* Copy data B */
-    for (i = 0; i < data_b_sz; i++) {
+    for(i = 0; i < data_b_sz; i++) {
         g_uart_buf[g_uart_end] = data_b[i];
         g_uart_end = (g_uart_end + 1) & UART_TX_BUF_MASK;
     }
@@ -172,6 +174,7 @@ uint32_t uart_write_mem(const void *buf, uint32_t len)
     n = len;
     if(n > buf_free) {
         /* Cut off what does not fit */
+        /* !!! No alignment is used here */
         n = buf_free;
         g_uart_drop_cnt++;
     }

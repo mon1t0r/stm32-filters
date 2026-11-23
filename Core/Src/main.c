@@ -66,6 +66,7 @@ TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim5;
 
 UART_HandleTypeDef huart1;
+DMA_HandleTypeDef hdma_usart1_tx;
 
 SDRAM_HandleTypeDef hsdram1;
 
@@ -104,8 +105,9 @@ static void MX_TIM5_Init(void);
   */
 int main(void)
 {
-  int r;
+
   /* USER CODE BEGIN 1 */
+  int r;
 
   /* USER CODE END 1 */
 
@@ -164,10 +166,9 @@ int main(void)
   while (1) {
     /* USER CODE END WHILE */
 
+    /* USER CODE BEGIN 3 */
     HAL_GPIO_TogglePin(USER_LED1_GPIO_Port, USER_LED1_Pin);
     HAL_Delay(1000);
-
-    /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
@@ -523,7 +524,7 @@ static void MX_SAI1_Init(void)
   hsai_BlockA1.Init.OutputDrive = SAI_OUTPUTDRIVE_DISABLE;
   hsai_BlockA1.Init.NoDivider = SAI_MASTERDIVIDER_ENABLE;
   hsai_BlockA1.Init.FIFOThreshold = SAI_FIFOTHRESHOLD_EMPTY;
-  hsai_BlockA1.Init.AudioFrequency = SAI_AUDIO_FREQUENCY_8K;
+  hsai_BlockA1.Init.AudioFrequency = SAI_AUDIO_FREQUENCY_11K;
   hsai_BlockA1.Init.SynchroExt = SAI_SYNCEXT_DISABLE;
   hsai_BlockA1.Init.MonoStereoMode = SAI_STEREOMODE;
   hsai_BlockA1.Init.CompandingMode = SAI_NOCOMPANDING;
@@ -741,7 +742,7 @@ static void MX_USART1_UART_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_UARTEx_DisableFifoMode(&huart1) != HAL_OK)
+  if (HAL_UARTEx_EnableFifoMode(&huart1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -767,6 +768,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
+  /* DMA1_Stream2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
 
 }
 

@@ -2,10 +2,10 @@
 
 #include <string.h>
 
-#include "main.h"
+#include "stm32h7xx_hal_def.h"
+#include "mem_attr.h"
 #include "cs42l51.h"
 #include "uart.h"
-#include "mem_attr.h"
 
 extern SAI_HandleTypeDef hsai_BlockA1; /* TX, master */
 extern SAI_HandleTypeDef hsai_BlockB1; /* RX, slave */
@@ -71,10 +71,9 @@ static const double g_weights[] = {
 /* Audio error count */
 volatile uint32_t g_audio_err_cnt = 0;
 
-/* Ring buffers from two halves: DMA fills one, MCU processes the other.
- * Align to 32 bytes for D-Cache in the future */
-static int16_t g_tx_buf[BUF_SAMPLES] __ATTR_RAM_D1 __ALIGNED(32);
-static int16_t g_rx_buf[BUF_SAMPLES] __ATTR_RAM_D1 __ALIGNED(32);
+/* Ring buffers from two halves: DMA fills one, MCU processes the other */
+static int16_t g_tx_buf[BUF_SAMPLES] __ATTR_RAM_D1;
+static int16_t g_rx_buf[BUF_SAMPLES] __ATTR_RAM_D1;
 
 /* Filter history buffer */
 static int16_t g_filter_hist[WEIGHTS_LEN * AUDIO_CHANNELS];
@@ -98,6 +97,7 @@ static void audio_filter(const int16_t *in, int16_t *out, uint32_t frames)
     uint32_t f, ch, w;
     int16_t sample;
     double sum;
+    int16_t sum_sat;
 
     /* Convolution */
     for(f = 0; f < frames; f++) {
@@ -117,14 +117,16 @@ static void audio_filter(const int16_t *in, int16_t *out, uint32_t frames)
                 sum += sample * g_weights[w];
             }
 
+            /* Saturate the sum */
+            sum_sat = audio_sat(sum);
+
             /* Write result to audio TX buffer */
-            out[f * AUDIO_CHANNELS + ch] = audio_sat(sum);
-            uart_write_u16(out[f * AUDIO_CHANNELS + ch]);
+            out[f * AUDIO_CHANNELS + ch] = sum_sat;
+
+            /* Write result to UART */
+            uart_write_u16(sum_sat);
         }
     }
-
-    /* Write result to UART */
-    //uart_write_mem(out, frames * AUDIO_CHANNELS * sizeof(*out));
 
     /* Update filter history */
     if(frames >= WEIGHTS_LEN - 1) {

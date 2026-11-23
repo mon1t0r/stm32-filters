@@ -63,14 +63,14 @@ class analysis(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.samp_rate = samp_rate = 8000
+        self.samp_rate = samp_rate = 11025
 
         ##################################################
         # Blocks
         ##################################################
 
         self.qtgui_time_sink_x_0_0 = qtgui.time_sink_f(
-            1024, #size
+            2048, #size
             samp_rate, #samp_rate
             "", #name
             1, #number of inputs
@@ -119,7 +119,7 @@ class analysis(gr.top_block, Qt.QWidget):
         self._qtgui_time_sink_x_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_0_win)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
-            1024, #size
+            2048, #size
             samp_rate, #samp_rate
             "", #name
             1, #number of inputs
@@ -185,7 +185,7 @@ class analysis(gr.top_block, Qt.QWidget):
         self.qtgui_freq_sink_x_0_0.set_fft_average(1.0)
         self.qtgui_freq_sink_x_0_0.enable_axis_labels(True)
         self.qtgui_freq_sink_x_0_0.enable_control_panel(True)
-        self.qtgui_freq_sink_x_0_0.set_fft_window_normalized(False)
+        self.qtgui_freq_sink_x_0_0.set_fft_window_normalized(True)
 
         self.qtgui_freq_sink_x_0_0.disable_legend()
 
@@ -229,7 +229,7 @@ class analysis(gr.top_block, Qt.QWidget):
         self.qtgui_freq_sink_x_0.set_fft_average(1.0)
         self.qtgui_freq_sink_x_0.enable_axis_labels(True)
         self.qtgui_freq_sink_x_0.enable_control_panel(True)
-        self.qtgui_freq_sink_x_0.set_fft_window_normalized(False)
+        self.qtgui_freq_sink_x_0.set_fft_window_normalized(True)
 
         self.qtgui_freq_sink_x_0.disable_legend()
 
