@@ -11,11 +11,8 @@ extern "C" {
 #define AUDIO_ERROR (-1)
 
 /* Same as in main.c SAI init */
-#define AUDIO_SAMPLE_RATE SAI_AUDIO_FREQUENCY_11K
+#define AUDIO_SAMPLE_RATE 12000
 #define AUDIO_CHANNELS    2
-
-/* 1ms delay */
-#define AUDIO_FRAMES_PER_BLOCK (AUDIO_SAMPLE_RATE / 1000)
 
 /* SAI error count (overrun/underrun) */
 /* Used while debugging */

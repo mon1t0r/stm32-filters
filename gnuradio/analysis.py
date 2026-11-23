@@ -268,8 +268,8 @@ class analysis(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.msg_connect((self.blocks_probe_rate_0, 'rate'), (self.blocks_message_debug_0, 'log'))
-        self.connect((self.blocks_stream_demux_0, 0), (self.audio_sink_0, 0))
         self.connect((self.blocks_stream_demux_0, 1), (self.audio_sink_0, 1))
+        self.connect((self.blocks_stream_demux_0, 0), (self.audio_sink_0, 0))
         self.connect((self.blocks_stream_demux_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.blocks_stream_demux_0, 1), (self.qtgui_freq_sink_x_0_0, 0))
         self.connect((self.blocks_stream_demux_0, 0), (self.qtgui_time_sink_x_0, 0))
