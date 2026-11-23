@@ -37,12 +37,64 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '11025'
+    value: '12000'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
     coordinate: [200, 12]
+    rotation: 0
+    state: enabled
+- name: audio_sink_0
+  id: audio_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    device_name: ''
+    num_inputs: '2'
+    ok_to_block: 'False'
+    samp_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 360.0]
+    rotation: 0
+    state: enabled
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    en_uvec: 'True'
+    log_level: info
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 752.0]
+    rotation: 0
+    state: enabled
+- name: blocks_probe_rate_0
+  id: blocks_probe_rate
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha: '0.15'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mintime: '500.0'
+    name: Throughput
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [328, 732.0]
     rotation: 0
     state: enabled
 - name: blocks_stream_demux_0
@@ -165,7 +217,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [632, 212.0]
+    coordinate: [608, 140.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0_0
@@ -246,7 +298,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [624, 412.0]
+    coordinate: [608, 452.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -343,7 +395,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [624, 324.0]
+    coordinate: [608, 244.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0_0
@@ -440,15 +492,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [624, 516.0]
+    coordinate: [608, 564.0]
     rotation: 0
     state: enabled
 
 connections:
+- [blocks_probe_rate_0, rate, blocks_message_debug_0, log]
+- [blocks_stream_demux_0, '0', audio_sink_0, '0']
 - [blocks_stream_demux_0, '0', qtgui_freq_sink_x_0, '0']
 - [blocks_stream_demux_0, '0', qtgui_time_sink_x_0, '0']
+- [blocks_stream_demux_0, '1', audio_sink_0, '1']
 - [blocks_stream_demux_0, '1', qtgui_freq_sink_x_0_0, '0']
 - [blocks_stream_demux_0, '1', qtgui_time_sink_x_0_0, '0']
+- [network_udp_source_0, '0', blocks_probe_rate_0, '0']
 - [network_udp_source_0, '0', blocks_stream_demux_0, '0']
 
 metadata:

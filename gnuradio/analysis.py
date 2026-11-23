@@ -11,7 +11,9 @@
 
 from PyQt5 import Qt
 from gnuradio import qtgui
+from gnuradio import audio
 from gnuradio import blocks
+from gnuradio import blocks, gr
 from gnuradio import gr
 from gnuradio.filter import firdes
 from gnuradio.fft import window
@@ -63,7 +65,7 @@ class analysis(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.samp_rate = samp_rate = 11025
+        self.samp_rate = samp_rate = 12000
 
         ##################################################
         # Blocks
@@ -257,15 +259,22 @@ class analysis(gr.top_block, Qt.QWidget):
         self.top_layout.addWidget(self._qtgui_freq_sink_x_0_win)
         self.network_udp_source_0 = network.udp_source(gr.sizeof_float, 1, 52856, 0, 960, False, False, False)
         self.blocks_stream_demux_0 = blocks.stream_demux(gr.sizeof_float*1, (1, 1))
+        self.blocks_probe_rate_0 = blocks.probe_rate(gr.sizeof_float*1, 500.0, 0.15, 'Throughput')
+        self.blocks_message_debug_0 = blocks.message_debug(True, gr.log_levels.info)
+        self.audio_sink_0 = audio.sink(samp_rate, '', False)
 
 
         ##################################################
         # Connections
         ##################################################
+        self.msg_connect((self.blocks_probe_rate_0, 'rate'), (self.blocks_message_debug_0, 'log'))
+        self.connect((self.blocks_stream_demux_0, 0), (self.audio_sink_0, 0))
+        self.connect((self.blocks_stream_demux_0, 1), (self.audio_sink_0, 1))
         self.connect((self.blocks_stream_demux_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.blocks_stream_demux_0, 1), (self.qtgui_freq_sink_x_0_0, 0))
         self.connect((self.blocks_stream_demux_0, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.blocks_stream_demux_0, 1), (self.qtgui_time_sink_x_0_0, 0))
+        self.connect((self.network_udp_source_0, 0), (self.blocks_probe_rate_0, 0))
         self.connect((self.network_udp_source_0, 0), (self.blocks_stream_demux_0, 0))
 
 
