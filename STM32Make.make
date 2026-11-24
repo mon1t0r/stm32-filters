@@ -76,6 +76,7 @@ endif
 # C sources
 C_SOURCES =  \
 Core/Src/audio.c \
+Core/Src/button.c \
 Core/Src/cs42l51.c \
 Core/Src/filter_cmsis.c \
 Core/Src/filter_custom.c \

@@ -150,24 +150,24 @@ int main(void)
   uart_init();
 
   r = 0;
-
   r |= filter_init();
-
   r |= audio_init();
 
   if(r) {
     /* Signal audio init error */
-    while (1) {
+    for(;;) {
       HAL_GPIO_TogglePin(USER_LED2_GPIO_Port, USER_LED2_Pin);
       HAL_Delay(100);
     }
   }
+
+  HAL_GPIO_WritePin(USER_LED2_GPIO_Port, USER_LED2_Pin, GPIO_PIN_SET);
   
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1) {
+  for(;;) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -951,6 +951,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.Alternate = GPIO_AF5_SPI6;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(WAKEUP_EXTI_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(WAKEUP_EXTI_IRQn);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 

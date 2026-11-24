@@ -1,3 +1,4 @@
+#undef FILTER_USE_CMSIS
 #ifndef FILTER_USE_CMSIS
 
 #include "filter.h"
@@ -8,7 +9,10 @@
 #include "audio.h"
 
 /* Filter history buffer */
-static int16_t g_filter_hist[WEIGHTS_LEN * AUDIO_CHANNELS];
+static int16_t g_filter_hist[FILTER_WEIGHTS_LEN * AUDIO_CHANNELS];
+
+/* Current filter index */
+static int g_filter_cur = 0;
 
 static inline int16_t audio_sat(double v)
 {
@@ -42,17 +46,17 @@ void filter_process(const int16_t *in, int16_t *out)
         for(ch = 0; ch < AUDIO_CHANNELS; ch++) {
             sum = 0.0;
 
-            for(w = 0; w < WEIGHTS_LEN; w++) {
+            for(w = 0; w < FILTER_WEIGHTS_LEN; w++) {
                 if(f < w) {
                     /* Use history samples */
-                    sample = g_filter_hist[(WEIGHTS_LEN - 1 + f - w) * AUDIO_CHANNELS + ch];
+                    sample = g_filter_hist[(FILTER_WEIGHTS_LEN - 1 + f - w) * AUDIO_CHANNELS + ch];
                 } else {
                     /* Use new samples */
                     sample = in[(f - w) * AUDIO_CHANNELS + ch];
                 }
 
                 /* MAC */
-                sum += sample * g_weights[w];
+                sum += sample * g_filter_weights[g_filter_cur][w];
             }
 
             /* Saturate the sum */
@@ -67,24 +71,30 @@ void filter_process(const int16_t *in, int16_t *out)
     }
 
     /* Update filter history */
-    if(AUDIO_FRAMES_PER_BLOCK >= WEIGHTS_LEN - 1) {
+    if(AUDIO_FRAMES_PER_BLOCK >= FILTER_WEIGHTS_LEN - 1) {
         memcpy(
             g_filter_hist,
-            &in[(AUDIO_FRAMES_PER_BLOCK - WEIGHTS_LEN + 1) * AUDIO_CHANNELS],
-            (WEIGHTS_LEN - 1) * AUDIO_CHANNELS * sizeof(*in)
+            &in[(AUDIO_FRAMES_PER_BLOCK - FILTER_WEIGHTS_LEN + 1) * AUDIO_CHANNELS],
+            (FILTER_WEIGHTS_LEN - 1) * AUDIO_CHANNELS * sizeof(*in)
         );
     } else {
         memmove(
             g_filter_hist,
             &g_filter_hist[AUDIO_FRAMES_PER_BLOCK * AUDIO_CHANNELS],
-            (WEIGHTS_LEN - 1 - AUDIO_FRAMES_PER_BLOCK) * AUDIO_CHANNELS * sizeof(*g_filter_hist)
+            (FILTER_WEIGHTS_LEN - 1 - AUDIO_FRAMES_PER_BLOCK) * AUDIO_CHANNELS * sizeof(*g_filter_hist)
         );
         memcpy(
-            &g_filter_hist[(WEIGHTS_LEN - 1 - AUDIO_FRAMES_PER_BLOCK) * AUDIO_CHANNELS],
+            &g_filter_hist[(FILTER_WEIGHTS_LEN - 1 - AUDIO_FRAMES_PER_BLOCK) * AUDIO_CHANNELS],
             in,
             AUDIO_FRAMES_PER_BLOCK * AUDIO_CHANNELS * sizeof(*in)
         );
     }
+}
+
+void filter_next(void)
+{
+    g_filter_cur = (g_filter_cur + 1) % FILTER_CNT;
+    memset(g_filter_hist, 0, sizeof(g_filter_hist));
 }
 
 #endif /* FILTER_USE_CMSIS */

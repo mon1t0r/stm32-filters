@@ -14,6 +14,8 @@ int filter_init(void);
 
 void filter_process(const int16_t *in, int16_t *out);
 
+void filter_next(void);
+
 #ifdef __cplusplus
 }
 #endif

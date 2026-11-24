@@ -2,7 +2,7 @@ fs = 16000;
 N = 16000;
 
 Nb = 160;
-f0 = 300 / (fs / 2);
+f0 = 800 / (fs / 2);
 b = fir1(Nb, f0, 'low');
 
 % Print filter coefficients

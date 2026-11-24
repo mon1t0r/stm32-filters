@@ -137,6 +137,7 @@ void Error_Handler(void);
 #define SDIO1_D1_GPIO_Port GPIOC
 #define WAKEUP_Pin GPIO_PIN_13
 #define WAKEUP_GPIO_Port GPIOC
+#define WAKEUP_EXTI_IRQn EXTI15_10_IRQn
 #define VCP_TX_Pin GPIO_PIN_9
 #define VCP_TX_GPIO_Port GPIOA
 #define SDIO1_D0_Pin GPIO_PIN_8
