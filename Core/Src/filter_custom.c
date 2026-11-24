@@ -1,4 +1,3 @@
-#undef FILTER_USE_CMSIS
 #ifndef FILTER_USE_CMSIS
 
 #include "filter.h"
