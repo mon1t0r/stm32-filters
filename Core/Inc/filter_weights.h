@@ -7,10 +7,24 @@ extern "C" {
 
 #include "arm_math_types.h"
 
+/* Filters are 160's order - number of coeficients is 161 */
+/* For integer version, number must be even - 162, zero is added in the array */
+
+#ifdef FILTER_MODE_INT
+#define FILTER_WEIGHTS_LEN 162
+#else
 #define FILTER_WEIGHTS_LEN 161
+#endif
+
 #define FILTER_CNT 2
 
-extern const float64_t g_filter_weights[FILTER_CNT][FILTER_WEIGHTS_LEN];
+#ifdef FILTER_MODE_INT
+typedef q15_t                fil_t;
+#else
+typedef float64_t            fil_t;
+#endif
+
+extern const fil_t g_filter_weights[FILTER_CNT][FILTER_WEIGHTS_LEN];
 
 #ifdef __cplusplus
 }

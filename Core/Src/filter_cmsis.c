@@ -9,15 +9,25 @@
 
 #include "arm_math.h"
 
+#ifdef FILTER_MODE_INT
+#define FIR_INIT             arm_fir_init_q15
+#define FIR_PROC             arm_fir_q15
+typedef arm_fir_instance_q15 fil_inst_t;
+#else
+#define FIR_INIT             arm_fir_init_f64
+#define FIR_PROC             arm_fir_f64
+typedef arm_fir_instance_f64 fil_inst_t;
+#endif
+
 /* Filter instance */
-static arm_fir_instance_f64 g_filters[FILTER_CNT][AUDIO_CHANNELS];
+static fil_inst_t g_filters[FILTER_CNT][AUDIO_CHANNELS];
 
 /* Filter history (all channels) */
-static float64_t g_filter_state[FILTER_CNT][AUDIO_CHANNELS][FILTER_WEIGHTS_LEN + AUDIO_FRAMES_PER_BLOCK - 1];
+static fil_t g_filter_state[FILTER_CNT][AUDIO_CHANNELS][FILTER_WEIGHTS_LEN + AUDIO_FRAMES_PER_BLOCK];
 
 /* Filter input/output buffers (single channel) */
-static float64_t g_filter_input[AUDIO_FRAMES_PER_BLOCK];
-static float64_t g_filter_output[AUDIO_FRAMES_PER_BLOCK];
+static fil_t g_filter_input[AUDIO_FRAMES_PER_BLOCK];
+static fil_t g_filter_output[AUDIO_FRAMES_PER_BLOCK];
 
 /* Current filter index */
 static int g_filter_cur = 0;
@@ -30,7 +40,7 @@ int filter_init(void)
 
     for(fil = 0; fil < FILTER_CNT; fil++) {
         for(ch = 0; ch < AUDIO_CHANNELS; ch++) {
-            arm_fir_init_f64(
+            FIR_INIT(
                 &g_filters[fil][ch],
                 FILTER_WEIGHTS_LEN,
                 &g_filter_weights[fil][0],
@@ -53,7 +63,7 @@ void filter_process(const int16_t *in, int16_t *out)
             g_filter_input[f] = in[f * AUDIO_CHANNELS + ch];
         }
 
-        arm_fir_f64(
+        FIR_PROC(
             &g_filters[g_filter_cur][ch],
             g_filter_input,
             g_filter_output,

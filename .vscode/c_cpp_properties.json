@@ -13,6 +13,7 @@
         "Drivers/STM32H7xx_HAL_Driver/Inc/Legacy"
       ],
       "defines": [
+        "FILTER_MODE_INT",
         "FILTER_USE_CMSIS",
         "STM32H7B3xxQ",
         "USE_HAL_DRIVER",

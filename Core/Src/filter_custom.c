@@ -8,20 +8,26 @@
 #include "uart.h"
 #include "audio.h"
 
+#ifdef FILTER_MODE_INT
+typedef q63_t fil_sum_t;
+#else
+typedef float64_t fil_sum_t;
+#endif
+
 /* Filter history buffer */
 static int16_t g_filter_hist[FILTER_WEIGHTS_LEN * AUDIO_CHANNELS];
 
 /* Current filter index */
 static int g_filter_cur = 0;
 
-static inline int16_t audio_sat(double v)
+static inline int16_t audio_sat(fil_sum_t v)
 {
     /* Saturate */
-    if(v > 32767.0) {
+    if(v > 32767) {
         return 32767;
     }
 
-    if(v < -32768.0) {
+    if(v < -32768) {
         return -32768;
     }
 
@@ -38,13 +44,13 @@ void filter_process(const int16_t *in, int16_t *out)
 {
     uint32_t f, ch, w;
     int16_t sample;
-    double sum;
+    fil_sum_t sum;
     int16_t sum_sat;
 
     /* Convolution */
     for(f = 0; f < AUDIO_FRAMES_PER_BLOCK; f++) {
         for(ch = 0; ch < AUDIO_CHANNELS; ch++) {
-            sum = 0.0;
+            sum = 0;
 
             for(w = 0; w < FILTER_WEIGHTS_LEN; w++) {
                 if(f < w) {
@@ -58,6 +64,12 @@ void filter_process(const int16_t *in, int16_t *out)
                 /* MAC */
                 sum += sample * g_filter_weights[g_filter_cur][w];
             }
+
+#ifdef FILTER_MODE_INT
+            /* Convert sum from Q2.30 to Q1.15 */
+            /* Divide by 32768 */
+            sum >>= 15;
+#endif
 
             /* Saturate the sum */
             sum_sat = audio_sat(sum);

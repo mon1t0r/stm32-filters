@@ -1,14 +1,22 @@
-fs = 16000;
-N = 16000;
+fs = 12000;
+N = 12000;
 
 Nb = 160;
-f0 = 800 / (fs / 2);
+f0 = 1000 / (fs / 2);
 b = fir1(Nb, f0, 'high');
 
-% Print filter coefficients
+% Print filter coefficients (float64_t)
 fprintf('%.15g, ', b);
 fprintf('\n');
 
+% Print filter coefficients (q15_t)
+b_q15 = int16(round(b * 32768));
+b_q15(b_q15 > 32767) = 32767;
+b_q15(b_q15 < -32768) = -32768;
+fprintf('%d, ', b_q15);
+fprintf('\n');
+
+% Frequency characteristics
 freqz(b, 1, N, fs);
 
 % Verification
