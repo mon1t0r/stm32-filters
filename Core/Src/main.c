@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 
 #include "stm32h7xx_hal_sai.h"
+#include "filter.h"
 #include "uart.h"
 #include "audio.h"
 
@@ -146,12 +147,15 @@ int main(void)
   MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
 
-  /* Initialize UART */
   uart_init();
 
-  /* Initialize audio processing */
-  r = audio_init();
-  if(r != AUDIO_OK) {
+  r = 0;
+
+  r |= filter_init();
+
+  r |= audio_init();
+
+  if(r) {
     /* Signal audio init error */
     while (1) {
       HAL_GPIO_TogglePin(USER_LED2_GPIO_Port, USER_LED2_Pin);

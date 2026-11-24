@@ -11,9 +11,8 @@
 extern SAI_HandleTypeDef hsai_BlockA1; /* TX, master */
 extern SAI_HandleTypeDef hsai_BlockB1; /* RX, slave */
 
-#define FRAMES_PER_BLOCK (AUDIO_SAMPLE_RATE / 1000) /* 1ms delay */
-#define BLOCK_SAMPLES    (FRAMES_PER_BLOCK * AUDIO_CHANNELS)
-#define BUF_SAMPLES      (BLOCK_SAMPLES * sizeof(uint16_t))
+#define BLOCK_SAMPLES (AUDIO_FRAMES_PER_BLOCK * AUDIO_CHANNELS)
+#define BUF_SAMPLES   (BLOCK_SAMPLES * sizeof(uint16_t))
 
 /* Ring buffers from two halves: DMA fills one, MCU processes the other */
 static int16_t g_tx_buf[BUF_SAMPLES] __ATTR_RAM_D1;
@@ -26,8 +25,7 @@ static inline void audio_process_half(int half)
 {
     filter_process(
         &g_rx_buf[half * BLOCK_SAMPLES],
-        &g_tx_buf[half * BLOCK_SAMPLES],
-        FRAMES_PER_BLOCK
+        &g_tx_buf[half * BLOCK_SAMPLES]
     );
 }
 

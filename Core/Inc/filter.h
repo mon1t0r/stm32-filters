@@ -7,9 +7,12 @@ extern "C" {
 
 #include <stdint.h>
 
-void filter_init(void);
+#define FILTER_OK    0
+#define FILTER_ERROR (-1)
 
-void filter_process(const int16_t *in, int16_t *out, uint32_t frames);
+int filter_init(void);
+
+void filter_process(const int16_t *in, int16_t *out);
 
 #ifdef __cplusplus
 }

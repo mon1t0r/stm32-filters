@@ -14,6 +14,9 @@ extern "C" {
 #define AUDIO_SAMPLE_RATE 12000
 #define AUDIO_CHANNELS    2
 
+/* 1ms delay */
+#define AUDIO_FRAMES_PER_BLOCK (AUDIO_SAMPLE_RATE / 1000)
+
 /* SAI error count (overrun/underrun) */
 /* Used while debugging */
 extern volatile uint32_t g_audio_err_cnt;

@@ -6,10 +6,14 @@
         "Core/Inc",
         "Drivers/CMSIS/Device/ST/STM32H7xx/Include",
         "Drivers/CMSIS/Include",
+        "Drivers/CMSIS_DSP/Include",
+        "Drivers/CMSIS_DSP/Include/dsp",
+        "Drivers/CMSIS_DSP/PrivateInclude",
         "Drivers/STM32H7xx_HAL_Driver/Inc",
         "Drivers/STM32H7xx_HAL_Driver/Inc/Legacy"
       ],
       "defines": [
+        "FILTER_USE_CMSIS",
         "STM32H7B3xxQ",
         "USE_HAL_DRIVER",
         "USE_PWR_DIRECT_SMPS_SUPPLY"

@@ -20,7 +20,7 @@ floatAbi: -mfloat-abi=hard
 ldscript: STM32H7B3xx_FLASH.ld # linker script
 
 # Compiler definitions. The -D prefix for the compiler will be automatically added.
-cDefinitions: []
+cDefinitions: [ FILTER_USE_CMSIS ]
 cxxDefinitions: []
 asDefinitions: []
 
@@ -80,6 +80,8 @@ includeDirectories:
   - Src/**
   - Core/Src/**
   - Core/Lib/**
+  - Drivers/CMSIS_DSP/Include/**
+  - Drivers/CMSIS_DSP/PrivateInclude/**
 
 
 # Files that should be included in the compilation.
@@ -91,6 +93,7 @@ sourceFiles:
   - Src/**
   - Core/Src/**
   - Core/Lib/**
+  - Drivers/CMSIS_DSP/Source/**
 
 
 # When no makefile is present it will show a warning pop-up.
