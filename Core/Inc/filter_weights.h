@@ -16,7 +16,7 @@ extern "C" {
 #define FILTER_WEIGHTS_LEN 161
 #endif
 
-#define FILTER_CNT 2
+#define FILTER_CNT 4
 
 #ifdef FILTER_MODE_INT
 typedef q15_t                fil_t;

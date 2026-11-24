@@ -46,6 +46,15 @@ void filter_process(const int16_t *in, int16_t *out)
     fil_sum_t sum;
     int16_t sum_sat;
 
+    /* No filter */
+    if(g_filter_cur == 0) {
+        for(f = 0; f < AUDIO_FRAMES_PER_BLOCK * AUDIO_CHANNELS; f++) {
+            out[f] = in[f];
+            uart_write_u16(in[f]);
+        }
+        return;
+    }
+
     /* Convolution */
     for(f = 0; f < AUDIO_FRAMES_PER_BLOCK; f++) {
         for(ch = 0; ch < AUDIO_CHANNELS; ch++) {
@@ -61,7 +70,7 @@ void filter_process(const int16_t *in, int16_t *out)
                 }
 
                 /* MAC */
-                sum += sample * g_filter_weights[g_filter_cur][w];
+                sum += sample * g_filter_weights[g_filter_cur - 1][w];
             }
 
 #ifdef FILTER_MODE_INT
@@ -104,7 +113,7 @@ void filter_process(const int16_t *in, int16_t *out)
 
 void filter_next(void)
 {
-    g_filter_cur = (g_filter_cur + 1) % FILTER_CNT;
+    g_filter_cur = (g_filter_cur + 1) % (FILTER_CNT + 1);
     memset(g_filter_hist, 0, sizeof(g_filter_hist));
 }
 

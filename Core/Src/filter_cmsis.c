@@ -57,6 +57,15 @@ void filter_process(const int16_t *in, int16_t *out)
 {
     uint32_t ch, f;
 
+    /* No filter */
+    if(g_filter_cur == 0) {
+        for(f = 0; f < AUDIO_FRAMES_PER_BLOCK * AUDIO_CHANNELS; f++) {
+            out[f] = in[f];
+            uart_write_u16(in[f]);
+        }
+        return;
+    }
+
     /* Compute filter results for each channel in a block */
     for(ch = 0; ch < AUDIO_CHANNELS; ch++) {
         for(f = 0; f < AUDIO_FRAMES_PER_BLOCK; f++) {
@@ -64,7 +73,7 @@ void filter_process(const int16_t *in, int16_t *out)
         }
 
         FIR_PROC(
-            &g_filters[g_filter_cur][ch],
+            &g_filters[g_filter_cur - 1][ch],
             g_filter_input,
             g_filter_output,
             AUDIO_FRAMES_PER_BLOCK
@@ -83,7 +92,7 @@ void filter_process(const int16_t *in, int16_t *out)
 
 void filter_next(void)
 {
-    g_filter_cur = (g_filter_cur + 1) % FILTER_CNT;
+    g_filter_cur = (g_filter_cur + 1) % (FILTER_CNT + 1);
 }
 
 #endif /* FILTER_USE_CMSIS */
