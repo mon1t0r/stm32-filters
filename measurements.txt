@@ -1,13 +1,13 @@
 =Custom - FLOAT64
 12000 Hz
 2 Channels
-FIR - 191 weights
+FIR - 201 weights
 
 
 =Custom - INT16
 12000 Hz
 2 Channels
-FIR - 181 weights
+FIR - 201 weights
 
 
 =CMSIS - FLOAT64 - No loop unrolling
