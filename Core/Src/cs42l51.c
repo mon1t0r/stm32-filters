@@ -180,28 +180,6 @@ int cs42l51_stop(void)
     return r;
 }
 
-int cs42l51_set_volume(int16_t half_db)
-{
-    int r;
-
-    /* Clip volume */
-    if(half_db > 24) {
-        /* +12 dB */
-        half_db = 24;
-    }
-
-    if(half_db < -204) {
-        /* -102 dB */
-        half_db = -204;
-    }
-
-    /* Set volume */
-    r  = cs42l51_write_reg(CS42L51_AOUTA_VOL_CTRL, (uint8_t) half_db);
-    r |= cs42l51_write_reg(CS42L51_AOUTB_VOL_CTRL, (uint8_t) half_db);
-
-    return r;
-}
-
 int cs42l51_set_mute(uint8_t mute)
 {
     uint8_t v;

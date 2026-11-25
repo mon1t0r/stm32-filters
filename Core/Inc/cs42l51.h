@@ -16,9 +16,6 @@ int cs42l51_start(void);
 
 int cs42l51_stop(void);
 
-/* Step is 0.5 dB */
-int cs42l51_set_volume(int16_t half_db);
-
 int cs42l51_set_mute(uint8_t mute);
 
 #ifdef __cplusplus
