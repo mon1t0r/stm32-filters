@@ -7,13 +7,31 @@ extern "C" {
 
 #include "arm_math_types.h"
 
-/* Filters are 160's order - number of coeficients is 161 */
-/* For integer version, number must be even - 162, zero is added in the array */
+#if defined(FILTER_MODE_INT) && defined(FILTER_USE_CMSIS)
+/* CMSIS - INT16 */
 
-#ifdef FILTER_MODE_INT
-#define FILTER_WEIGHTS_LEN 162
-#else
-#define FILTER_WEIGHTS_LEN 161
+/* 330's order - 331 coeficients */
+/* For integer version, number must be even - 332, zero is added in the array */
+#define FILTER_WEIGHTS_LEN 332
+
+#elif defined(FILTER_MODE_INT) && !defined(FILTER_USE_CMSIS)
+/* CUSTOM - INT16 */
+
+/* 180's order - 181 coeficients */
+#define FILTER_WEIGHTS_LEN 181
+
+#elif !defined(FILTER_MODE_INT) && defined(FILTER_USE_CMSIS)
+/* CMSIS - FLOAT64 */
+
+/* 240's order - 241 coeficients */
+#define FILTER_WEIGHTS_LEN 241
+
+#elif !defined(FILTER_MODE_INT) && !defined(FILTER_USE_CMSIS)
+/* CUSTOM - FLOAT64 */
+
+/* 190's order - 191 coeficients */
+#define FILTER_WEIGHTS_LEN 191
+
 #endif
 
 #define FILTER_CNT 4

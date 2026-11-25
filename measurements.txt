@@ -1,0 +1,20 @@
+=CMSIS - INT16
+12000 Hz
+2 Channels
+FIR - 332 weights
+
+=CMSIS - FLOAT64
+12000 Hz
+2 Channels
+FIR - 241 weights
+
+=Custom - INT16
+12000 Hz
+2 Channels
+FIR - 181 weights
+
+=Custom - FLOAT64
+12000 Hz
+2 Channels
+FIR - 191 weights
+
