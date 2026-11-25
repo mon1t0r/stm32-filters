@@ -37,8 +37,8 @@ extern "C" {
 #elif defined(FILTER_MODE_INT) && !defined(FILTER_USE_CMSIS)
 /* CUSTOM - INT16 */
 
-/* 180's order - 181 coeficients */
-#define FILTER_WEIGHTS_LEN 181
+/* 200's order - 201 coeficients */
+#define FILTER_WEIGHTS_LEN 201
 
 #elif !defined(FILTER_MODE_INT) && defined(FILTER_USE_CMSIS)
 /* CMSIS - FLOAT64 */
@@ -49,8 +49,8 @@ extern "C" {
 #elif !defined(FILTER_MODE_INT) && !defined(FILTER_USE_CMSIS)
 /* CUSTOM - FLOAT64 */
 
-/* 190's order - 191 coeficients */
-#define FILTER_WEIGHTS_LEN 191
+/* 200's order - 201 coeficients */
+#define FILTER_WEIGHTS_LEN 201
 
 #endif
 

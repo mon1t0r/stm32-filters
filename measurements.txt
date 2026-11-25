@@ -23,16 +23,16 @@ FIR - 332 weights
 
 
 =CMSIS - INT16 - Loop unrolling
+12000 Hz
+2 Channels
+FIR - 1552 weights
+
+
+=CMSIS - INT16 - Loop unrolling
 44100 Hz
 2 Channels
 FIR - 332 weights
 // UART does not keep up
-
-
-=CMSIS - INT16 - Loop unrolling
-12000 Hz
-2 Channels
-FIR - 1552 weights
 
 
 =CMSIS - FLOAT32 - Loop unrolling
