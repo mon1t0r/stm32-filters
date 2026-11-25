@@ -7,8 +7,15 @@ extern "C" {
 
 #include "arm_math_types.h"
 
-#if defined(FILTER_MODE_INT) && defined(FILTER_USE_CMSIS)
-/* CMSIS - INT16 */
+#if defined(FILTER_MODE_INT) && defined(FILTER_USE_CMSIS) && defined(ARM_MATH_LOOPUNROLL)
+/* CMSIS - INT16 - LOOPUNROLL */
+
+/* 1550's order - 1551 coeficients */
+/* For integer version, number must be even - 1552, zero is added in the array */
+#define FILTER_WEIGHTS_LEN 1552
+
+#elif defined(FILTER_MODE_INT) && defined(FILTER_USE_CMSIS) && !defined(ARM_MATH_LOOPUNROLL)
+/* CMSIS - INT16 - No LOOPUNROLL */
 
 /* 330's order - 331 coeficients */
 /* For integer version, number must be even - 332, zero is added in the array */
