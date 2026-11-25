@@ -20,6 +20,7 @@ floatAbi: -mfloat-abi=hard
 ldscript: STM32H7B3xx_FLASH.ld # linker script
 
 # Compiler definitions. The -D prefix for the compiler will be automatically added.
+#cDefinitions: [ ARM_MATH_LOOPUNROLL, FILTER_USE_CMSIS, FILTER_MODE_INT, FILTER_TYPE_IIR ]
 cDefinitions: [ ARM_MATH_LOOPUNROLL, FILTER_USE_CMSIS, FILTER_MODE_INT ]
 cxxDefinitions: []
 asDefinitions: []

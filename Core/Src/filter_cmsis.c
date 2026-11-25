@@ -9,14 +9,18 @@
 
 #include "arm_math.h"
 
-#ifdef FILTER_MODE_INT
-#define FIR_INIT             arm_fir_init_q15
-#define FIR_PROC             arm_fir_q15
-typedef arm_fir_instance_q15 fil_inst_t;
+#ifdef FILTER_TYPE_IIR
+#define FIR_INIT                     arm_biquad_cascade_df1_init_f32
+#define FIR_PROC                     arm_biquad_cascade_df1_f32
+typedef arm_biquad_casd_df1_inst_f32 fil_inst_t;
+#elif defined(FILTER_MODE_INT)
+#define FIR_INIT                     arm_fir_init_q15
+#define FIR_PROC                     arm_fir_q15
+typedef arm_fir_instance_q15         fil_inst_t;
 #else
-#define FIR_INIT             arm_fir_init_f64
-#define FIR_PROC             arm_fir_f64
-typedef arm_fir_instance_f64 fil_inst_t;
+#define FIR_INIT                     arm_fir_init_f64
+#define FIR_PROC                     arm_fir_f64
+typedef arm_fir_instance_f64         fil_inst_t;
 #endif
 
 /* Filter instance */
@@ -40,6 +44,14 @@ int filter_init(void)
 
     for(fil = 0; fil < FILTER_CNT; fil++) {
         for(ch = 0; ch < AUDIO_CHANNELS; ch++) {
+#ifdef FILTER_TYPE_IIR
+            FIR_INIT(
+                &g_filters[fil][ch],
+                FILTER_IIR_NUM_STAGES,
+                &g_filter_weights[fil][0],
+                &g_filter_state[fil][ch][0]
+            );
+#else
             FIR_INIT(
                 &g_filters[fil][ch],
                 FILTER_WEIGHTS_LEN,
@@ -47,6 +59,7 @@ int filter_init(void)
                 &g_filter_state[fil][ch][0],
                 AUDIO_FRAMES_PER_BLOCK
             );
+#endif
         }
     }
 

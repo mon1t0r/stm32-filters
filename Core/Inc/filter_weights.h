@@ -7,6 +7,19 @@ extern "C" {
 
 #include "arm_math_types.h"
 
+#ifdef FILTER_TYPE_IIR
+/* IIR configuration */
+
+#define FILTER_CNT 1
+
+#define FILTER_IIR_NUM_STAGES 10
+#define FILTER_WEIGHTS_LEN (FILTER_IIR_NUM_STAGES * 5)
+
+#else
+/* FIR configuration */
+
+#define FILTER_CNT 4
+
 #if defined(FILTER_MODE_INT) && defined(FILTER_USE_CMSIS) && defined(ARM_MATH_LOOPUNROLL)
 /* CMSIS - INT16 - LOOPUNROLL */
 
@@ -41,13 +54,17 @@ extern "C" {
 
 #endif
 
-#define FILTER_CNT 4
+#endif /* FILTER_MODE_IIR else */
 
-#ifdef FILTER_MODE_INT
+
+#ifdef FILTER_TYPE_IIR
+typedef float32_t            fil_t;
+#elif defined(FILTER_MODE_INT)
 typedef q15_t                fil_t;
 #else
 typedef float64_t            fil_t;
 #endif
+
 
 extern const fil_t g_filter_weights[FILTER_CNT][FILTER_WEIGHTS_LEN];
 

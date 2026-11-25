@@ -10,9 +10,9 @@ fprintf('%.15g, ', b);
 fprintf('\n');
 
 % Print filter coefficients (q15_t)
-b_q15 = int16(round(b * 32768));
-b_q15(b_q15 > 32767) = 32767;
-b_q15(b_q15 < -32768) = -32768;
+b_q15 = round(b * 32768);
+b_q15 = min(max(b_q15, -32768), 32767);
+b_q15 = int16(b_q15);
 fprintf('%d, ', b_q15);
 fprintf('\n');
 

@@ -1,5 +1,23 @@
 #include "filter_weights.h"
 
+#ifdef FILTER_TYPE_IIR
+/* IIR weights */
+
+const fil_t g_filter_weights[FILTER_CNT][FILTER_WEIGHTS_LEN] = {
+    /* Second order sections cascade Low-pass - 23 sections - 1000 Hz */
+    {
+        7.576680e-18, 1.515336e-17, 7.576680e-18, 1.923398e+00, -9.265111e-01,
+        1, 2, 1, 1.912060e+00, -9.284948e-01, 1, 2, 1, 1.890769e+00,
+        -9.323688e-01, 1, 2, 1, 1.862083e+00, -9.379607e-01, 1, 2, 1,
+        1.829362e+00, -9.450451e-01, 1, 2, 1, 1.796331e+00, -9.533713e-01, 1, 2,
+        1, 1.766665e+00, -9.626895e-01, 1, 2, 1, 1.743654e+00, -9.727682e-01, 1,
+        2, 1, 1.729962e+00, -9.834017e-01, 1, 2, 1, 1.727470e+00, -9.944087e-01,
+    }
+};
+
+#else
+/* FIR weights */
+
 #if defined(FILTER_MODE_INT) && defined(FILTER_USE_CMSIS) && defined(ARM_MATH_LOOPUNROLL)
 /* CMSIS - INT16 - LOOPUNROLL */
 
@@ -1084,3 +1102,5 @@ const fil_t g_filter_weights[FILTER_CNT][FILTER_WEIGHTS_LEN] = {
 };
 
 #endif
+
+#endif /* FILTER_MODE_IIR else */
