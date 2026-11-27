@@ -16,7 +16,8 @@ extern UART_HandleTypeDef huart1;
 static uint8_t g_uart_buf[UART_TX_BUF_SIZE] __ATTR_RAM_D1;
 static volatile uint32_t g_uart_start;
 static volatile uint32_t g_uart_end;
-static volatile uint32_t g_uart_tx_len; /* Length during current transmission */
+/* Length during current transmission */
+static volatile uint32_t g_uart_tx_len;
 static volatile uint8_t g_uart_is_busy;
 
 volatile uint32_t g_uart_drop_cnt = 0;

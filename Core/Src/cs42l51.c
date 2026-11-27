@@ -101,9 +101,11 @@ int cs42l51_init(void)
     uint8_t id;
 
     /* Hardware reset */
-    HAL_GPIO_WritePin(AUDIO_NRST_GPIO_Port, AUDIO_NRST_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(AUDIO_NRST_GPIO_Port, AUDIO_NRST_Pin,
+                      GPIO_PIN_RESET);
     HAL_Delay(5);
-    HAL_GPIO_WritePin(AUDIO_NRST_GPIO_Port, AUDIO_NRST_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(AUDIO_NRST_GPIO_Port, AUDIO_NRST_Pin,
+                      GPIO_PIN_SET);
     HAL_Delay(5);
 
     id = 0;
@@ -130,23 +132,28 @@ int cs42l51_init(void)
                            CS42L51_PDN_MICA | CS42L51_PDN_MICBIAS);
 
     /* Codec in slave mode, I2S mode for DAC and ADC */
-    r |= cs42l51_write_reg(CS42L51_INTERFACE_CTRL, INTF_DAC_I2S | INTF_ADC_I2S);
+    r |= cs42l51_write_reg(CS42L51_INTERFACE_CTRL,
+                           INTF_DAC_I2S | INTF_ADC_I2S);
 
     /* Mic crontrol - disable all */
     r |= cs42l51_write_reg(CS42L51_MIC_CTRL, 0x0U);
 
     /* Select channels input in ADC mux */
     r |= cs42l51_write_reg(CS42L51_ADCX_INPUT_SELECT,
-                           (uint8_t) ((CS42L51_INPUT_MUX << 6) | (CS42L51_INPUT_MUX << 4)));
+                           (uint8_t) ((CS42L51_INPUT_MUX << 6) |
+                           (CS42L51_INPUT_MUX << 4)));
 
-    /* Disable ADC -> DAC internal codec mixer - data flows only through microcontroller */
+    /* Disable ADC -> DAC internal codec mixer - data flows only through
+     * microcontroller */
     r |= cs42l51_write_reg(CS42L51_ADCA_MIXER_VOL_CTRL, MUTE_ADCMIXx);
     r |= cs42l51_write_reg(CS42L51_ADCB_MIXER_VOL_CTRL, MUTE_ADCMIXx);
-    r |= cs42l51_write_reg(CS42L51_PCMA_MIXER_VOL_CTRL, 0x0U); /* O dB */
+    /* 0 dB */
+    r |= cs42l51_write_reg(CS42L51_PCMA_MIXER_VOL_CTRL, 0x0U);
     r |= cs42l51_write_reg(CS42L51_PCMB_MIXER_VOL_CTRL, 0x0U);
 
     /* Set DAC output gain */
-    r |= cs42l51_write_reg(CS42L51_DAC_OUTPUT_CTRL, DAC_HP_GAIN_0P6047);
+    r |= cs42l51_write_reg(CS42L51_DAC_OUTPUT_CTRL,
+                           DAC_HP_GAIN_0P6047);
 
     /* Set output channel gain */
     r |= cs42l51_write_reg(CS42L51_AOUTA_VOL_CTRL, 0x0U); /* 0 dB */

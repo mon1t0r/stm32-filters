@@ -59,12 +59,14 @@ int audio_init(void)
     memset(g_rx_buf, 0, sizeof(g_rx_buf));
 
     /* Set up SAI DMA */
-    r = HAL_SAI_Receive_DMA(&hsai_BlockB1, (uint8_t *) g_rx_buf, BUF_SAMPLES);
+    r = HAL_SAI_Receive_DMA(&hsai_BlockB1, (uint8_t *) g_rx_buf,
+                            BUF_SAMPLES);
     if(r != HAL_OK) {
         return AUDIO_ERROR;
     }
 
-    r = HAL_SAI_Transmit_DMA(&hsai_BlockA1, (uint8_t *) g_tx_buf, BUF_SAMPLES);
+    r = HAL_SAI_Transmit_DMA(&hsai_BlockA1, (uint8_t *) g_tx_buf,
+                             BUF_SAMPLES);
     if(r != HAL_OK) {
         return AUDIO_ERROR;
     }

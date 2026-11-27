@@ -63,7 +63,8 @@ void filter_process(const int16_t *in, int16_t *out)
             for(w = 0; w < FILTER_WEIGHTS_LEN; w++) {
                 if(f < w) {
                     /* Use history samples */
-                    sample = g_filter_hist[(FILTER_WEIGHTS_LEN - 1 + f - w) * AUDIO_CHANNELS + ch];
+                    sample = g_filter_hist[(FILTER_WEIGHTS_LEN - 1 + f - w) *
+                                           AUDIO_CHANNELS + ch];
                 } else {
                     /* Use new samples */
                     sample = in[(f - w) * AUDIO_CHANNELS + ch];
@@ -94,17 +95,20 @@ void filter_process(const int16_t *in, int16_t *out)
     if(AUDIO_FRAMES_PER_BLOCK >= FILTER_WEIGHTS_LEN - 1) {
         memcpy(
             g_filter_hist,
-            &in[(AUDIO_FRAMES_PER_BLOCK - FILTER_WEIGHTS_LEN + 1) * AUDIO_CHANNELS],
+            &in[(AUDIO_FRAMES_PER_BLOCK - FILTER_WEIGHTS_LEN + 1) *
+                AUDIO_CHANNELS],
             (FILTER_WEIGHTS_LEN - 1) * AUDIO_CHANNELS * sizeof(*in)
         );
     } else {
         memmove(
             g_filter_hist,
             &g_filter_hist[AUDIO_FRAMES_PER_BLOCK * AUDIO_CHANNELS],
-            (FILTER_WEIGHTS_LEN - 1 - AUDIO_FRAMES_PER_BLOCK) * AUDIO_CHANNELS * sizeof(*g_filter_hist)
+            (FILTER_WEIGHTS_LEN - 1 - AUDIO_FRAMES_PER_BLOCK) *
+            AUDIO_CHANNELS * sizeof(*g_filter_hist)
         );
         memcpy(
-            &g_filter_hist[(FILTER_WEIGHTS_LEN - 1 - AUDIO_FRAMES_PER_BLOCK) * AUDIO_CHANNELS],
+            &g_filter_hist[(FILTER_WEIGHTS_LEN - 1 - AUDIO_FRAMES_PER_BLOCK) *
+                           AUDIO_CHANNELS],
             in,
             AUDIO_FRAMES_PER_BLOCK * AUDIO_CHANNELS * sizeof(*in)
         );

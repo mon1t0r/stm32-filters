@@ -27,7 +27,8 @@ typedef arm_fir_instance_f64         fil_inst_t;
 static fil_inst_t g_filters[FILTER_CNT][AUDIO_CHANNELS];
 
 /* Filter history (all channels) */
-static fil_t g_filter_state[FILTER_CNT][AUDIO_CHANNELS][FILTER_WEIGHTS_LEN + AUDIO_FRAMES_PER_BLOCK];
+static fil_t g_filter_state[FILTER_CNT][AUDIO_CHANNELS]
+                           [FILTER_WEIGHTS_LEN + AUDIO_FRAMES_PER_BLOCK];
 
 /* Filter input/output buffers (single channel) */
 static fil_t g_filter_input[AUDIO_FRAMES_PER_BLOCK];
