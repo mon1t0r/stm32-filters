@@ -49,3 +49,13 @@ configuration. Then, in another terminal window, run
 `python gnuradio/udp_bridge.py` to start reading serial port and sending data
 to the GNU Radio software. You should now see an amplitude graph and a Fourier
 transform graph for each channel (4 graphs in total).
+
+## Screenshots
+Below are screenshots of GNU Radio software, different FIR filters are tested.
+
+![500 Hz signal - No filter](./info/test_500hz_no_filter.png)
+![500 Hz signal - Low pass](./info/test_500hz_low_pass.png)
+![500 Hz signal - High pass](./info/test_500hz_high_pass.png)
+![500 Hz signal - Band pass](./info/test_500hz_band_pass.png)
+![500 Hz signal - Band stop](./info/test_500hz_band_stop.png)
+
